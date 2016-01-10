@@ -25,8 +25,7 @@ RUN gem update --system && \
     gem install --no-document pry-byebug && \
     gem install --no-document bundler
 
-COPY build.sh /build.sh
-COPY test/ /test/
+COPY devicefiles/ /devicefiles/
 
 # build sd card image
-CMD /build.sh
+CMD /devicefiles/build.sh

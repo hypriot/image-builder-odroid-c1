@@ -47,38 +47,13 @@ mount -o bind /dev/pts "${BUILD_PATH}/dev/pts"
 mount -t proc none "${BUILD_PATH}/proc"
 mount -t sysfs none "${BUILD_PATH}/sys"
 
-# make our build directory the current root
-# and install additional packages
-chroot ${BUILD_PATH} /bin/bash <<"EOF"
-# set up /etc/resolv.conf
-export DEST=$(readlink -m /etc/resolv.conf)
-mkdir -p $(dirname $DEST)
-echo "nameserver 8.8.8.8" > $DEST
+# modify image in chroot environment
+chroot ${BUILD_PATH} /bin/bash </devicefiles/chroot-script.sh
 
-# set up odroid repository
-apt-key adv --keyserver keyserver.ubuntu.com --recv-keys AB19BAC9
-echo "deb http://deb.odroid.in/c1/ trusty main" > /etc/apt/sources.list.d/odroid.list
-echo "deb http://deb.odroid.in/ trusty main" >> /etc/apt/sources.list.d/odroid.list
-
-# install parted (for online disk resizing)
-apt-get update
-apt-get install -y parted
-
-# install odroid kernel
-export DEBIAN_FRONTEND=noninteractive
-mkdir -p /media/boot
-apt-get install -y u-boot-tools
-apt-get install -y linux-image-c1
-
-# set device label
-echo 'HYPRIOT_DEVICE="ODROID C1"' >> /etc/os-release
-exit
-EOF
-
+umount -l "${BUILD_PATH}/sys" || true
+umount -l "${BUILD_PATH}/proc" || true
 umount -l "${BUILD_PATH}/dev/pts" || true
 umount -l "${BUILD_PATH}/dev" || true
-umount -l "${BUILD_PATH}/proc" || true
-umount -l "${BUILD_PATH}/sys" || true
 
 # package image rootfs
 tar -czf "${IMAGE_ROOTFS_PATH}" -C "${BUILD_PATH}" .
@@ -109,7 +84,7 @@ EOF
 fdisk -l /${IMAGE_NAME}
 
 # test sd-image that we have built
-rspec --format documentation --color /test
+rspec --format documentation --color /devicefiles/test
 
 # ensure that the travis-ci user can access the sd-card image file
 umask 0000
