@@ -21,10 +21,6 @@ BUILD_PATH="/build"
 ROOTFS_TAR="rootfs-armhf.tar.gz"
 ROOTFS_TAR_PATH="${BUILD_RESULT_PATH}/${ROOTFS_TAR}"
 
-# what kernel to use
-KERNEL_DATETIME=${KERNEL_DATETIME:="20151103-193133"}
-KERNEL_VERSION=${KERNEL_VERSION:="4.1.12"}
-
 # size of root and boot partion
 ROOT_PARTITION_SIZE="800M"
 
