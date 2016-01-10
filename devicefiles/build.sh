@@ -83,11 +83,11 @@ EOF
 # log image partioning
 fdisk -l /${IMAGE_NAME}
 
-# test sd-image that we have built
-rspec --format documentation --color /devicefiles/test
-
 # ensure that the travis-ci user can access the sd-card image file
 umask 0000
 
 # compress image
 pigz --zip -c "${IMAGE_NAME}" > "${BUILD_RESULT_PATH}/${IMAGE_NAME}.zip"
+
+# test sd-image that we have built
+rspec --format documentation --color /devicefiles/test
