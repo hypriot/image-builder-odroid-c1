@@ -84,7 +84,7 @@ umount -l "${BUILD_PATH}/sys" || true
 tar -czf "${IMAGE_ROOTFS_PATH}" -C "${BUILD_PATH}" .
 
 # create the image and add a single ext4 filesystem
-# --- important settings for NVIDIA ShieldTV SD card
+# --- important settings for ODROID SD card
 # - initialise the partion with MBR
 # - use start sector 2048, this reserves 1MByte of disk space
 # - don't set the partition to "bootable"
