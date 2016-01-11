@@ -21,7 +21,7 @@ apt-get install -y parted
 # install odroid kernel
 export DEBIAN_FRONTEND=noninteractive
 mkdir -p /media/boot
-apt-get install -y u-boot-tools
+apt-get install -y u-boot-tools initramfs-tools
 apt-get install -y linux-image-c1
 
 # set device label
