@@ -34,6 +34,8 @@ apt-get install -y sudo
 # install odroid kernel
 export DEBIAN_FRONTEND=noninteractive
 apt-get install -y u-boot-tools initramfs-tools
+# make the kernel package create a copy of the current kernel here
+touch /boot/uImage
 apt-get install -y linux-image-c1
 
 # install Hypriot group and user
