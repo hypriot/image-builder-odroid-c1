@@ -20,6 +20,10 @@ echo "deb http://deb.odroid.in/ trusty main" >> /etc/apt/sources.list.d/odroid.l
 apt-get update
 
 #FIXME: has to be moved to hypriot/os-rootfs
+# upgrade to latest Debian package versions
+apt-get upgrade -y
+
+#FIXME: has to be moved to hypriot/os-rootfs
 # install parted (for online disk resizing)
 apt-get install -y parted
 
