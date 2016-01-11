@@ -40,7 +40,7 @@ tar -xzf "${ROOTFS_TAR_PATH}" -C "${BUILD_PATH}"
 update-binfmts --enable qemu-"${QEMU_ARCH}"
 
 # set up mount points for pseudo filesystems
-mkdir -p "${BUILD_PATH}/{proc,sys,dev/pts}"
+mkdir -p ${BUILD_PATH}/{proc,sys,dev/pts}
 
 mount -o bind /dev "${BUILD_PATH}/dev"
 mount -o bind /dev/pts "${BUILD_PATH}/dev/pts"
