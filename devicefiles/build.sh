@@ -74,18 +74,31 @@ tar -czf $IMAGE_ROOTFS_PATH -C $BUILD_PATH .
 # - format the disk with ext4
 # for debugging use 'set-verbose true'
 #set-verbose true
+
+# download current bootloader/u-boot images from hardkernel
+wget -q https://raw.githubusercontent.com/mdrjr/c1_uboot_binaries/master/bl1.bin.hardkernel
+wget -q https://raw.githubusercontent.com/mdrjr/c1_uboot_binaries/master/u-boot.bin
+
 guestfish <<EOF
 # create new image disk
 sparse /$IMAGE_NAME $ROOT_PARTITION_SIZE
 run
 part-init /dev/sda mbr
-part-add /dev/sda primary 2048 -1
+part-add /dev/sda primary 3072 -1
 part-set-bootable /dev/sda 1 false
 mkfs ext4 /dev/sda1
 
 # import base rootfs
 mount /dev/sda1 /
 tar-in $IMAGE_ROOTFS_PATH / compress:gzip
+
+# Write bootloader & u-boot
+upload bl1.bin.hardkernel /boot/bl1.bin.hardkernel
+upload u-boot.bin /boot/u-boot.bin
+upload /devicefiles/boot.ini /boot/boot.ini
+copy-file-to-device /boot/bl1.bin.hardkernel /dev/sda size:442 sparse:true
+copy-file-to-device /boot/bl1.bin.hardkernel /dev/sda srcoffset:512 destoffset:512 sparse:true
+copy-file-to-device /boot/u-boot.bin /dev/sda destoffset:32768 sparse:true
 EOF
 
 # log image partioning
