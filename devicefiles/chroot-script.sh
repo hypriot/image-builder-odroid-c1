@@ -34,7 +34,7 @@ apt-get install -y linux-image-c1
 
 # install Hypriot group and user
 addgroup --system --quiet $HYPRIOT_GROUPNAME
-useradd -m pirate --group $HYPRIOT_GROUPNAME --shell /bin/bash
+useradd -m $HYPRIOT_USERNAME --group $HYPRIOT_GROUPNAME --shell /bin/bash
 echo "$HYPRIOT_USERNAME:$HYPRIOT_PASSWORD" | /usr/sbin/chpasswd
 # add user to sudoers group
 echo "$HYPRIOT_USERNAME ALL=NOPASSWD: ALL" > /etc/sudoers.d/user-$HYPRIOT_USERNAME
