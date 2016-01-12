@@ -17,14 +17,6 @@ echo "deb http://deb.odroid.in/ trusty main" >> /etc/apt/sources.list.d/odroid.l
 
 apt-get update
 
-#FIXME: has to be moved to hypriot/os-rootfs
-# install parted (for online disk resizing)
-apt-get install -y parted
-
-#FIXME: has to be moved to hypriot/os-rootfs
-# install sudo (for our default user)
-apt-get install -y sudo
-
 # install odroid kernel
 export DEBIAN_FRONTEND=noninteractive
 apt-get install -y u-boot-tools initramfs-tools
