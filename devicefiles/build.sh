@@ -20,6 +20,7 @@ BUILD_PATH="/build"
 # where to store our base file system
 ROOTFS_TAR="rootfs-armhf.tar.gz"
 ROOTFS_TAR_PATH="$BUILD_RESULT_PATH/$ROOTFS_TAR"
+ROOTFS_TAR_VERSION="v0.4"
 
 # size of root and boot partion
 ROOT_PARTITION_SIZE="800M"
@@ -30,7 +31,7 @@ mkdir -p $BUILD_PATH
 
 # download our base root file system
 if [ ! -f $ROOTFS_TAR_PATH ]; then
-  wget -q -O $ROOTFS_TAR_PATH https://github.com/hypriot/os-rootfs/releases/download/v0.4/$ROOTFS_TAR
+  wget -q -O $ROOTFS_TAR_PATH https://github.com/hypriot/os-rootfs/releases/download/$ROOTFS_TAR_VERSION/$ROOTFS_TAR
 fi
 
 # extract root file system
