@@ -71,12 +71,13 @@ tar -czf $IMAGE_ROOTFS_PATH -C $BUILD_PATH .
 # create the image and add a single ext4 filesystem
 # --- important settings for ODROID SD card
 # - initialise the partion with MBR
-# - use start sector 2048, this reserves 1MByte of disk space
+# - use start sector 3072, this reserves 1.5MByte of disk space
 # - don't set the partition to "bootable"
 # - format the disk with ext4
 # for debugging use 'set-verbose true'
 #set-verbose true
 
+#FIXME: use latest upstream u-boot files from hardkernel
 # download current bootloader/u-boot images from hardkernel
 wget -q https://raw.githubusercontent.com/mdrjr/c1_uboot_binaries/master/bl1.bin.hardkernel
 wget -q https://raw.githubusercontent.com/mdrjr/c1_uboot_binaries/master/u-boot.bin
@@ -94,7 +95,9 @@ mkfs ext4 /dev/sda1
 mount /dev/sda1 /
 tar-in $IMAGE_ROOTFS_PATH / compress:gzip
 
-# Write bootloader & u-boot
+#FIXME: use dd to directly writing u-boot to image file
+#FIXME2: later on, create a dedicated .deb package to install/update u-boot
+# write bootloader and u-boot into image start sectors 0-3071
 upload bl1.bin.hardkernel /boot/bl1.bin.hardkernel
 upload u-boot.bin /boot/u-boot.bin
 upload /devicefiles/boot.ini /boot/boot.ini
