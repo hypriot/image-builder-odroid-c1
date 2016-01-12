@@ -49,6 +49,8 @@ mount -t sysfs none $BUILD_PATH/sys
 
 #---modify image---
 # modify/add image files directly
+cp /devicefiles/resize-disk-odroid.sh $BUILD_PATH/root/
+
 #FIXME: create dedicated Hypriot .deb package
 # install bash prompt as skeleton files (root and default for all new users)
 cp /devicefiles/etc/skel/{.bash_prompt,.bashrc,.profile} $BUILD_PATH/root/
