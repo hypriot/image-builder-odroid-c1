@@ -50,15 +50,15 @@ mount -t sysfs none $BUILD_PATH/sys
 
 #---modify image---
 # modify/add image files directly
-cp /devicefiles/resize-disk-odroid.sh $BUILD_PATH/root/
+cp /builder/resize-disk-odroid.sh $BUILD_PATH/root/
 
 #FIXME: create dedicated Hypriot .deb package
 # install bash prompt as skeleton files (root and default for all new users)
-cp /devicefiles/etc/skel/{.bash_prompt,.bashrc,.profile} $BUILD_PATH/root/
-cp /devicefiles/etc/skel/{.bash_prompt,.bashrc,.profile} $BUILD_PATH/etc/skel/
+cp /builder/files/etc/skel/{.bash_prompt,.bashrc,.profile} $BUILD_PATH/root/
+cp /builder/files/etc/skel/{.bash_prompt,.bashrc,.profile} $BUILD_PATH/etc/skel/
 
 # modify image in chroot environment
-chroot $BUILD_PATH /bin/bash </devicefiles/chroot-script.sh
+chroot $BUILD_PATH /bin/bash </builder/chroot-script.sh
 #---modify image---
 
 umount -l $BUILD_PATH/sys || true
@@ -101,7 +101,7 @@ tar-in $IMAGE_ROOTFS_PATH / compress:gzip
 # write bootloader and u-boot into image start sectors 0-3071
 upload bl1.bin.hardkernel /boot/bl1.bin.hardkernel
 upload u-boot.bin /boot/u-boot.bin
-upload /devicefiles/boot.ini /boot/boot.ini
+upload /builder/boot.ini /boot/boot.ini
 copy-file-to-device /boot/bl1.bin.hardkernel /dev/sda size:442 sparse:true
 copy-file-to-device /boot/bl1.bin.hardkernel /dev/sda srcoffset:512 destoffset:512 sparse:true
 copy-file-to-device /boot/u-boot.bin /dev/sda destoffset:32768 sparse:true
@@ -117,4 +117,4 @@ umask 0000
 pigz --zip -c $IMAGE_NAME > $BUILD_RESULT_PATH/$IMAGE_NAME.zip
 
 # test sd-image that we have built
-rspec --format documentation --color /devicefiles/test
+rspec --format documentation --color /builder/test
