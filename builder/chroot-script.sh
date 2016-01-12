@@ -32,11 +32,5 @@ echo "$HYPRIOT_USERNAME:$HYPRIOT_PASSWORD" | /usr/sbin/chpasswd
 echo "$HYPRIOT_USERNAME ALL=NOPASSWD: ALL" > /etc/sudoers.d/user-$HYPRIOT_USERNAME
 chmod 0440 /etc/sudoers.d/user-$HYPRIOT_USERNAME
 
-#FIXME: has to be removed in hypriot/os-rootfs
-# disable SSH root login
-sed -i 's|PermitRootLogin yes|PermitRootLogin without-password|g' /etc/ssh/sshd_config
-# remove/disable root password
-passwd -d root
-
 # set device label
 echo "HYPRIOT_DEVICE=\"$HYPRIOT_DEVICE\"" >> /etc/os-release
