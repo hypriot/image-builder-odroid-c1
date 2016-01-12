@@ -3,9 +3,6 @@ set -x
 
 # device specific settings
 HYPRIOT_DEVICE="ODROID C1"
-HYPRIOT_GROUPNAME="docker"
-HYPRIOT_USERNAME="pirate"
-HYPRIOT_PASSWORD="hypriot"
 
 # set up /etc/resolv.conf
 echo "nameserver 8.8.8.8" > /etc/resolv.conf
@@ -23,14 +20,6 @@ apt-get install -y u-boot-tools initramfs-tools
 # make the kernel package create a copy of the current kernel here
 touch /boot/uImage
 apt-get install -y linux-image-c1
-
-# install Hypriot group and user
-addgroup --system --quiet $HYPRIOT_GROUPNAME
-useradd -m $HYPRIOT_USERNAME --group $HYPRIOT_GROUPNAME --shell /bin/bash
-echo "$HYPRIOT_USERNAME:$HYPRIOT_PASSWORD" | /usr/sbin/chpasswd
-# add user to sudoers group
-echo "$HYPRIOT_USERNAME ALL=NOPASSWD: ALL" > /etc/sudoers.d/user-$HYPRIOT_USERNAME
-chmod 0440 /etc/sudoers.d/user-$HYPRIOT_USERNAME
 
 # set device label
 echo "HYPRIOT_DEVICE=\"$HYPRIOT_DEVICE\"" >> /etc/os-release
