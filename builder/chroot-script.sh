@@ -8,9 +8,7 @@ HYPRIOT_USERNAME="pirate"
 HYPRIOT_PASSWORD="hypriot"
 
 # set up /etc/resolv.conf
-DEST=$(readlink -m /etc/resolv.conf)
-mkdir -p $(dirname $DEST)
-echo "nameserver 8.8.8.8" > $DEST
+echo "nameserver 8.8.8.8" > /etc/resolv.conf
 
 # set up odroid repository
 apt-key adv --keyserver keyserver.ubuntu.com --recv-keys AB19BAC9
