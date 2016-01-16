@@ -38,5 +38,8 @@ apt-get install -y \
   docker-compose \
   docker-machine
 
+# enable Docker systemd service
+systemctl enable docker
+
 # set device label
 echo "HYPRIOT_DEVICE=\"$HYPRIOT_DEVICE\"" >> /etc/os-release
