@@ -50,7 +50,7 @@ mount -t sysfs none $BUILD_PATH/sys
 
 #---modify image---
 # modify/add image files directly
-cp /builder/resize-disk-odroid.sh $BUILD_PATH/root/
+cp -R /builder/files/* $BUILD_PATH/
 
 # modify image in chroot environment
 chroot $BUILD_PATH /bin/bash </builder/chroot-script.sh
