@@ -33,10 +33,12 @@ sed -i '/#DOCKER_OPTS/a \
 DOCKER_OPTS="--storage-driver=aufs -D"' /etc/default/docker
 
 # install hypriot packages for using docker
+set +e
 apt-get install -y \
   docker-hypriot \
   docker-compose \
   docker-machine
+set -e
 
 # enable Docker systemd service
 systemctl enable docker
