@@ -1,5 +1,5 @@
-#!/bin/bash -e
-set -x
+#!/bin/bash
+set -ex
 
 # device specific settings
 HYPRIOT_DEVICE="ODROID C1/C1+"

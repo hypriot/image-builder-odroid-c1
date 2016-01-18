@@ -1,5 +1,5 @@
-#!/bin/bash -e
-set -x
+#!/bin/bash
+set -ex
 
 # sd card device name for ODROID C1/C1+
 SDCARD_DEVICE="/dev/mmcblk0"
