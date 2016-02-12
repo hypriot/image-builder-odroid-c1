@@ -13,6 +13,8 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     kpartx \
     lvm2 \
     dosfstools \
+    zip \
+    unzip \
     pigz \
     awscli \
     ruby \
