@@ -1,12 +1,10 @@
-require 'serverspec'
-set :backend, :exec
+require_relative 'spec_helper'
 
 describe "Root filesystem" do
   let(:rootfs_path) { return '/build' }
 
   it "exists" do
     rootfs_dir = file(rootfs_path)
-
     expect(rootfs_dir).to exist
   end
 
