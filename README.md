@@ -5,7 +5,7 @@
 
 **Disclaimer:** This is work in progress and not yet finished. But if you want to help us and give feedback for the upcoming HypriotOS please read on. You can find the latest SD-Card image in the [GitHub releases page](https://github.com/hypriot/image-builder-odroid-c1/releases).
 
-This repo builds the SD card image with HypriotOS for the Raspberry Pi 2. To build this SD-Card image we have to
+This repo builds the SD card image with HypriotOS for the ODROID C1 board. To build this SD-Card image we have to
 
  * take the files for the root filesystem from [`os-rootfs`](https://github.com/hypriot/os-rootfs)
  * add Hypriot's Debian repos
@@ -53,7 +53,7 @@ make test
 
 ### Run integration tests
 
-Now flash the SD-Card image and boot up a Raspberry Pi. Run the [Serverspec](http://serverspec.org) integration tests in `builder/test-integration/` folder against your Raspberry Pi. Set the environment variable `BOARD` to the IP address or host name of your running Raspberry Pi.
+Now flash the SD-Card image and boot up a ODROID C1. Run the [Serverspec](http://serverspec.org) integration tests in `builder/test-integration/` folder against your ODROID C1. Set the environment variable `BOARD` to the IP address or host name of your running ODROID C1.
 
 ```bash
 flash sd-card-odroid-c1-dirty.img.zip
