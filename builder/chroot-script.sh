@@ -42,7 +42,7 @@ DOCKER_OPTS=\"--storage-driver=aufs -D\"" /etc/default/docker
 # enable Docker systemd service
 systemctl enable docker
 
-# --- install ODROID kernel ---
+# install ODROID kernel
 
 apt-get install -y u-boot-tools initramfs-tools
 
@@ -50,7 +50,6 @@ apt-get install -y u-boot-tools initramfs-tools
 touch /boot/uImage
 apt-get install -y linux-image-c1
 
-# ---
-
-# set device label
+# set device label and version number
 echo "HYPRIOT_DEVICE=\"$HYPRIOT_DEVICE\"" >> /etc/os-release
+echo "HYPRIOT_IMAGE_VERSION=\"$HYPRIOT_IMAGE_VERSION\"" >> /etc/os-release
