@@ -109,13 +109,13 @@ copy-file-to-device /boot/u-boot.bin /dev/sda destoffset:32768 sparse:true
 EOF
 
 # log image partioning
-fdisk -l /$IMAGE_NAME
+fdisk -l "/$IMAGE_NAME"
 
 # ensure that the travis-ci user can access the sd-card image file
 umask 0000
 
 # compress image
-pigz --zip -c $IMAGE_NAME > $BUILD_RESULT_PATH/$IMAGE_NAME.zip
+pigz --zip -c "$IMAGE_NAME" > "$BUILD_RESULT_PATH/$IMAGE_NAME.zip"
 
 # test sd-image that we have built
 VERSION=${IMAGE_VERSION} rspec --format documentation --color /builder/test

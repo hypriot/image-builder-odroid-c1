@@ -35,8 +35,8 @@ rm -f /etc/default/docker
 # --get upstream config
 wget -q -O /etc/default/docker https://github.com/docker/docker/raw/master/contrib/init/sysvinit-debian/docker.default
 # --enable aufs by default
-sed -i '/#DOCKER_OPTS/a \
-DOCKER_OPTS="--storage-driver=aufs -D"' /etc/default/docker
+sed -i "/#DOCKER_OPTS/a \
+DOCKER_OPTS=\"--storage-driver=aufs -D\"" /etc/default/docker
 
 #FIXME: should be handled in .deb package
 # enable Docker systemd service
