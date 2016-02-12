@@ -13,7 +13,7 @@ BUILD_RESULT_PATH="/workspace"
 BUILD_PATH="/build"
 
 # where to store our base file system
-HYPRIOT_OS_VERSION="v0.7.1"
+HYPRIOT_OS_VERSION="v0.7.2"
 ROOTFS_TAR="rootfs-armhf-${HYPRIOT_OS_VERSION}.tar.gz"
 ROOTFS_TAR_PATH="$BUILD_RESULT_PATH/$ROOTFS_TAR"
 
@@ -28,7 +28,7 @@ QEMU_ARCH="arm"
 export HYPRIOT_IMAGE_VERSION
 
 # specific versions of kernel/firmware and docker tools
-export DOCKER_ENGINE_VERSION="1.10.0-1"
+export DOCKER_ENGINE_VERSION="1.10.1-1"
 export DOCKER_COMPOSE_VERSION="1.6.0-27"
 export DOCKER_MACHINE_VERSION="0.4.1-72"
 
