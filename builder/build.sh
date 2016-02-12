@@ -8,11 +8,6 @@ fi
 
 ### setting up some important variables to control the build process
 
-# device specific settings
-IMAGE_NAME="sd-card-odroid-c1.img"
-IMAGE_ROOTFS_PATH="/image-rootfs.tar.gz"
-QEMU_ARCH="arm"
-
 # where to store our created sd-image file
 BUILD_RESULT_PATH="/workspace"
 BUILD_PATH="/build"
@@ -24,6 +19,17 @@ ROOTFS_TAR_PATH="$BUILD_RESULT_PATH/$ROOTFS_TAR"
 
 # size of root and boot partion
 ROOT_PARTITION_SIZE="800M"
+
+# device specific settings
+IMAGE_VERSION=${VERSION:="dirty"}
+IMAGE_NAME="sd-card-odroid-c1-${IMAGE_VERSION}.img"
+IMAGE_ROOTFS_PATH="/image-rootfs.tar.gz"
+QEMU_ARCH="arm"
+
+# specific versions of kernel/firmware and docker tools
+export DOCKER_ENGINE_VERSION="1.9.1-1"
+export DOCKER_COMPOSE_VERSION="1.5.2-80"
+export DOCKER_MACHINE_VERSION="0.4.1-72"
 
 # create build directory for assembling our image filesystem
 rm -rf $BUILD_PATH
@@ -112,4 +118,4 @@ umask 0000
 pigz --zip -c $IMAGE_NAME > $BUILD_RESULT_PATH/$IMAGE_NAME.zip
 
 # test sd-image that we have built
-rspec --format documentation --color /builder/test
+VERSION=${IMAGE_VERSION} rspec --format documentation --color /builder/test

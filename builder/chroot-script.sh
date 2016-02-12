@@ -24,9 +24,9 @@ apt-get update
 
 # install Hypriot packages for using Docker
 apt-get install -y \
-  docker-hypriot \
-  docker-compose \
-  docker-machine
+  "docker-hypriot=${DOCKER_ENGINE_VERSION}" \
+  "docker-compose=${DOCKER_COMPOSE_VERSION}" \
+  "docker-machine=${DOCKER_MACHINE_VERSION}"
 
 #FIXME: should be handled in .deb package
 # setup Docker default configuration for ODROID C1
