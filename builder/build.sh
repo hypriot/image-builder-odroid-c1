@@ -13,18 +13,19 @@ BUILD_RESULT_PATH="/workspace"
 BUILD_PATH="/build"
 
 # where to store our base file system
-ROOTFS_TAR_VERSION="v0.7.0"
-ROOTFS_TAR="rootfs-armhf-${ROOTFS_TAR_VERSION}.tar.gz"
+HYPRIOT_OS_VERSION="v0.7.1"
+ROOTFS_TAR="rootfs-armhf-${HYPRIOT_OS_VERSION}.tar.gz"
 ROOTFS_TAR_PATH="$BUILD_RESULT_PATH/$ROOTFS_TAR"
 
 # size of root and boot partion
 ROOT_PARTITION_SIZE="800M"
 
 # device specific settings
-IMAGE_VERSION=${VERSION:="dirty"}
-IMAGE_NAME="sd-card-odroid-c1-${IMAGE_VERSION}.img"
+HYPRIOT_IMAGE_VERSION=${VERSION:="dirty"}
+HYPRIOT_IMAGE_NAME="sd-card-odroid-c1-${HYPRIOT_IMAGE_VERSION}.img"
 IMAGE_ROOTFS_PATH="/image-rootfs.tar.gz"
 QEMU_ARCH="arm"
+export HYPRIOT_IMAGE_VERSION
 
 # specific versions of kernel/firmware and docker tools
 export DOCKER_ENGINE_VERSION="1.9.1-1"
@@ -37,7 +38,7 @@ mkdir -p $BUILD_PATH
 
 # download our base root file system
 if [ ! -f $ROOTFS_TAR_PATH ]; then
-  wget -q -O $ROOTFS_TAR_PATH https://github.com/hypriot/os-rootfs/releases/download/$ROOTFS_TAR_VERSION/$ROOTFS_TAR
+  wget -q -O $ROOTFS_TAR_PATH https://github.com/hypriot/os-rootfs/releases/download/$HYPRIOT_OS_VERSION/$ROOTFS_TAR
 fi
 
 # extract root file system
@@ -86,7 +87,7 @@ wget -q https://raw.githubusercontent.com/mdrjr/c1_uboot_binaries/master/u-boot.
 
 guestfish <<EOF
 # create new image disk
-sparse /$IMAGE_NAME $ROOT_PARTITION_SIZE
+sparse /$HYPRIOT_IMAGE_NAME $ROOT_PARTITION_SIZE
 run
 part-init /dev/sda mbr
 part-add /dev/sda primary 3072 -1
@@ -109,13 +110,13 @@ copy-file-to-device /boot/u-boot.bin /dev/sda destoffset:32768 sparse:true
 EOF
 
 # log image partioning
-fdisk -l "/$IMAGE_NAME"
+fdisk -l "/$HYPRIOT_IMAGE_NAME"
 
 # ensure that the travis-ci user can access the sd-card image file
 umask 0000
 
 # compress image
-pigz --zip -c "$IMAGE_NAME" > "$BUILD_RESULT_PATH/$IMAGE_NAME.zip"
+pigz --zip -c "$HYPRIOT_IMAGE_NAME" > "$BUILD_RESULT_PATH/$HYPRIOT_IMAGE_NAME.zip"
 
 # test sd-image that we have built
-VERSION=${IMAGE_VERSION} rspec --format documentation --color /builder/test
+VERSION=${HYPRIOT_IMAGE_VERSION} rspec --format documentation --color /builder/test
