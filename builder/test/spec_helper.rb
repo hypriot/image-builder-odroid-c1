@@ -2,7 +2,7 @@ require 'serverspec'
 set :backend, :exec
 
 def image_path
-  return "sd-card-odroid-c1-#{ENV['VERSION']}.img"
+  return "hypriotos-odroid-c1-#{ENV['VERSION']}.img"
 end
 
 def run( cmd )
