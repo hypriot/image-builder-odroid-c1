@@ -1,76 +1,85 @@
 #!/bin/bash
 set -ex
 # This script should be run only inside of a Docker container
-if [ ! -f /.dockerinit ]; then
+if [ ! -f /.dockerenv ]; then
   echo "ERROR: script works only in a Docker container!"
   exit 1
 fi
+
+# get versions for software that needs to be installed
+source /workspace/versions.config
 
 ### setting up some important variables to control the build process
 
 # where to store our created sd-image file
 BUILD_RESULT_PATH="/workspace"
+
+# place to build our sd-image
 BUILD_PATH="/build"
 
-# where to store our base file system
-HYPRIOT_OS_VERSION="v0.7.2"
-ROOTFS_TAR="rootfs-armhf-${HYPRIOT_OS_VERSION}.tar.gz"
+ROOTFS_TAR="rootfs-armhf-debian-${HYPRIOT_OS_VERSION}.tar.gz"
 ROOTFS_TAR_PATH="$BUILD_RESULT_PATH/$ROOTFS_TAR"
+
+# Show TRAVSI_TAG in travis builds
+echo TRAVIS_TAG="${TRAVIS_TAG}"
 
 # size of root and boot partion
 ROOT_PARTITION_SIZE="800M"
 
 # device specific settings
 HYPRIOT_IMAGE_VERSION=${VERSION:="dirty"}
-HYPRIOT_IMAGE_NAME="sd-card-odroid-c1-${HYPRIOT_IMAGE_VERSION}.img"
+HYPRIOT_IMAGE_NAME="hypriotos-odroid-c1-${HYPRIOT_IMAGE_VERSION}.img"
 IMAGE_ROOTFS_PATH="/image-rootfs.tar.gz"
 QEMU_ARCH="arm"
 export HYPRIOT_IMAGE_VERSION
 
-# specific versions of kernel/firmware and docker tools
-export KERNEL_VERSION="142-1"
-export DOCKER_ENGINE_VERSION="1.10.1-1"
-export DOCKER_COMPOSE_VERSION="1.6.0-27"
-export DOCKER_MACHINE_VERSION="0.4.1-72"
-
 # create build directory for assembling our image filesystem
-rm -rf $BUILD_PATH
-mkdir -p $BUILD_PATH
+rm -rf ${BUILD_PATH}
+mkdir ${BUILD_PATH}
 
 # download our base root file system
-if [ ! -f $ROOTFS_TAR_PATH ]; then
-  wget -q -O $ROOTFS_TAR_PATH https://github.com/hypriot/os-rootfs/releases/download/$HYPRIOT_OS_VERSION/$ROOTFS_TAR
+if [ ! -f "${ROOTFS_TAR_PATH}" ]; then
+  wget -q -O "${ROOTFS_TAR_PATH}" "https://github.com/hypriot/os-rootfs/releases/download/${HYPRIOT_OS_VERSION}/${ROOTFS_TAR}"
 fi
 
+# verify checksum of our root filesystem
+echo "${ROOTFS_TAR_CHECKSUM} ${ROOTFS_TAR_PATH}" | sha256sum -c -
+
 # extract root file system
-tar -xzf $ROOTFS_TAR_PATH -C $BUILD_PATH
+tar xf "${ROOTFS_TAR_PATH}" -C "${BUILD_PATH}"
 
 # register qemu-arm with binfmt
 update-binfmts --enable qemu-$QEMU_ARCH
 
-# set up mount points for pseudo filesystems
-mkdir -p $BUILD_PATH/{proc,sys,dev/pts}
+# set up mount points for the pseudo filesystems
+mkdir -p ${BUILD_PATH}/{proc,sys,dev/pts}
 
-mount -o bind /dev $BUILD_PATH/dev
-mount -o bind /dev/pts $BUILD_PATH/dev/pts
-mount -t proc none $BUILD_PATH/proc
-mount -t sysfs none $BUILD_PATH/sys
+mount -o bind /dev ${BUILD_PATH}/dev
+mount -o bind /dev/pts ${BUILD_PATH}/dev/pts
+mount -t proc none ${BUILD_PATH}/proc
+mount -t sysfs none ${BUILD_PATH}/sys
 
-#---modify image---
 # modify/add image files directly
-cp -R /builder/files/* $BUILD_PATH/
+# e.g. root partition resize script
+cp -R /builder/files/* ${BUILD_PATH}/
 
-# modify image in chroot environment
-chroot $BUILD_PATH /bin/bash </builder/chroot-script.sh
-#---modify image---
+# make our build directory the current root
+# and install the kernel packages, docker tools
+# and some customizations for Odroid C2.
+chroot $BUILD_PATH /bin/bash < /builder/chroot-script.sh
 
-umount -l $BUILD_PATH/sys || true
-umount -l $BUILD_PATH/proc || true
-umount -l $BUILD_PATH/dev/pts || true
-umount -l $BUILD_PATH/dev || true
+# unmount pseudo filesystems
+umount -l $BUILD_PATH/sys
+umount -l $BUILD_PATH/proc
+umount -l $BUILD_PATH/dev/pts
+umount -l $BUILD_PATH/dev
 
 # package image rootfs
 tar -czf $IMAGE_ROOTFS_PATH -C $BUILD_PATH .
+
+# package image filesytem into two tarballs - one for bootfs and one for rootfs
+# ensure that there are no leftover artifacts in the pseudo filesystems
+rm -rf ${BUILD_PATH}/{dev,sys,proc}/*
 
 # create the image and add a single ext4 filesystem
 # --- important settings for ODROID SD card
@@ -117,7 +126,8 @@ fdisk -l "/$HYPRIOT_IMAGE_NAME"
 umask 0000
 
 # compress image
-pigz --zip -c "$HYPRIOT_IMAGE_NAME" > "$BUILD_RESULT_PATH/$HYPRIOT_IMAGE_NAME.zip"
+zip "${BUILD_RESULT_PATH}/${HYPRIOT_IMAGE_NAME}.zip" "${HYPRIOT_IMAGE_NAME}"
+cd ${BUILD_RESULT_PATH} && sha256sum "${HYPRIOT_IMAGE_NAME}.zip" > "${HYPRIOT_IMAGE_NAME}.zip.sha256" && cd -
 
 # test sd-image that we have built
 VERSION=${HYPRIOT_IMAGE_VERSION} rspec --format documentation --color /builder/test

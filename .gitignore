@@ -1,4 +1,5 @@
 *.img
 *.img.zip
+*.img.zip.sha256
 *.tar.gz
 .vagrant/
