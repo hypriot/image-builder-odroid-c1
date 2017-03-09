@@ -8,36 +8,40 @@ HYPRIOT_DEVICE="ODROID C1/C1+"
 echo "nameserver 8.8.8.8" > /etc/resolv.conf
 
 # set up ODROID repository
-apt-key adv --keyserver keyserver.ubuntu.com --recv-keys AB19BAC9
-echo "deb http://deb.odroid.in/c1/ trusty main" > /etc/apt/sources.list.d/odroid.list
-echo "deb http://deb.odroid.in/ trusty main" >> /etc/apt/sources.list.d/odroid.list
+apt-key adv --keyserver keyserver.ubuntu.com --recv-keys AB19BAC9 D986B59D
+echo "deb http://deb.odroid.in/c1/ xenial main" > /etc/apt/sources.list.d/odroid.list
 
 # set up Hypriot Schatzkiste repository
 wget -q https://packagecloud.io/gpg.key -O - | apt-key add -
 echo 'deb https://packagecloud.io/Hypriot/Schatzkiste/debian/ wheezy main' > /etc/apt/sources.list.d/hypriot.list
 
+# Set up docker repository
+apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 2C52609D
+echo 'deb [arch=armhf] https://apt.dockerproject.org/repo debian-jessie main' > /etc/apt/sources.list.d/docker.list
+
 # update all apt repository lists
 export DEBIAN_FRONTEND=noninteractive
-apt-get update
+apt-get update 
 
 # ---install Docker tools---
-
-# install Hypriot packages for using Docker
 apt-get install -y \
+  lxc \
+  aufs-tools \
+  cgroupfs-mount \
+  cgroup-bin \
+  apparmor \
+  libltdl7 \
+  "docker-engine=${DOCKER_ENGINE_VERSION}" \
   "docker-compose=${DOCKER_COMPOSE_VERSION}" \
-  "docker-machine=${DOCKER_MACHINE_VERSION}"
+  "docker-machine=${DOCKER_MACHINE_VERSION}" \
+  --no-install-recommends
 
 # install ODROID kernel
-
-apt-get install -y u-boot-tools initramfs-tools
-
-# set up Docker APT repository and install docker-engine package
-#TODO: pin package version to ${DOCKER_ENGINE_VERSION}
-curl -sSL https://get.docker.com | /bin/sh
-
-# make the kernel package create a copy of the current kernel here
 touch /boot/uImage
-apt-get install -y "linux-image-c1=${KERNEL_VERSION}"
+apt-get install -y \
+  "u-boot-tools" \
+  "initramfs-tools" \
+  "linux-image-c1=${KERNEL_VERSION}"
 
 # cleanup APT cache and lists
 apt-get clean
