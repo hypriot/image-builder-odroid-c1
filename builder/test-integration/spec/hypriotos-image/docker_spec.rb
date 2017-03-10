@@ -6,7 +6,7 @@ end
 
 describe command('dpkg -l docker-engine') do
   its(:stdout) { should match /ii  docker-engine/ }
-  its(:stdout) { should match /17.03.0~ce-0~raspbian-jessie/ }
+  its(:stdout) { should match /17.03.0~ce-0~debian-jessie/ }
   its(:exit_status) { should eq 0 }
 end
 
@@ -65,7 +65,7 @@ describe file('/var/lib/docker') do
   it { should be_owned_by 'root' }
 end
 
-describe file('/var/lib/docker/overlay2') do
+describe file('/var/lib/docker/aufs') do
   it { should be_directory }
   it { should be_mode 700 }
   it { should be_owned_by 'root' }
@@ -90,7 +90,7 @@ describe command('docker version') do
 end
 
 describe command('docker info') do
-  its(:stdout) { should match /Storage Driver: overlay/ }
+  its(:stdout) { should match /Storage Driver: aufs/ }
   its(:exit_status) { should eq 0 }
 end
 

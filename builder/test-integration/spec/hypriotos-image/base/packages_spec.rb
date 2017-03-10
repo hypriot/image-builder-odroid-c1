@@ -56,7 +56,10 @@ describe package('linux-image-c1') do
 end
 
 # additional application packages
-describe package('docker-hypriot') do
+describe package('device-init') do
+  it { should be_installed }
+end
+describe package('docker-engine') do
   it { should be_installed }
 end
 describe package('docker-compose') do

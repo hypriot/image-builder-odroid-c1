@@ -13,7 +13,7 @@ echo "deb http://deb.odroid.in/c1/ xenial main" > /etc/apt/sources.list.d/odroid
 
 # set up Hypriot Schatzkiste repository
 wget -q https://packagecloud.io/gpg.key -O - | apt-key add -
-echo 'deb https://packagecloud.io/Hypriot/Schatzkiste/debian/ wheezy main' > /etc/apt/sources.list.d/hypriot.list
+echo 'deb https://packagecloud.io/Hypriot/Schatzkiste/debian/ jessie main' > /etc/apt/sources.list.d/hypriot.list
 
 # Set up docker repository
 apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 2C52609D
@@ -22,26 +22,25 @@ echo 'deb [arch=armhf] https://apt.dockerproject.org/repo debian-jessie main' > 
 # update all apt repository lists
 export DEBIAN_FRONTEND=noninteractive
 apt-get update 
+apt-get upgrade -y 
 
 # ---install Docker tools---
 apt-get install -y \
-  lxc \
-  aufs-tools \
+  fake-hwclock \
+  device-init="${DEVICE_INIT_VERSION}" \
   cgroupfs-mount \
   cgroup-bin \
-  apparmor \
   libltdl7 \
-  "docker-engine=${DOCKER_ENGINE_VERSION}" \
-  "docker-compose=${DOCKER_COMPOSE_VERSION}" \
-  "docker-machine=${DOCKER_MACHINE_VERSION}" \
-  --no-install-recommends
+  docker-engine="${DOCKER_ENGINE_VERSION}" \
+  docker-compose="${DOCKER_COMPOSE_VERSION}" \
+  docker-machine="${DOCKER_MACHINE_VERSION}" 
 
 # install ODROID kernel
 touch /boot/uImage
 apt-get install -y \
-  "u-boot-tools" \
-  "initramfs-tools" \
-  "linux-image-c1=${KERNEL_VERSION}"
+  u-boot-tools \
+  initramfs-tools \
+  linux-image-c1="${KERNEL_VERSION}"
 
 # cleanup APT cache and lists
 apt-get clean
