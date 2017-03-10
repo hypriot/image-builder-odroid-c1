@@ -27,20 +27,20 @@ apt-get upgrade -y
 # ---install Docker tools---
 apt-get install -y \
   fake-hwclock \
-  device-init=${DEVICE_INIT_VERSION} \
+  device-init="${DEVICE_INIT_VERSION}" \
   cgroupfs-mount \
   cgroup-bin \
   libltdl7 \
-  docker-engine=${DOCKER_ENGINE_VERSION} \
-  docker-compose=${DOCKER_COMPOSE_VERSION} \
-  docker-machine=${DOCKER_MACHINE_VERSION} 
+  docker-engine="${DOCKER_ENGINE_VERSION}" \
+  docker-compose="${DOCKER_COMPOSE_VERSION}" \
+  docker-machine="${DOCKER_MACHINE_VERSION}" 
 
 # install ODROID kernel
 touch /boot/uImage
 apt-get install -y \
-  "u-boot-tools" \
-  "initramfs-tools" \
-  "linux-image-c1=${KERNEL_VERSION}"
+  u-boot-tools \
+  initramfs-tools \
+  linux-image-c1="${KERNEL_VERSION}"
 
 # cleanup APT cache and lists
 apt-get clean
