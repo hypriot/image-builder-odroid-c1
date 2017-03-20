@@ -50,7 +50,7 @@ apt-get -y install --no-install-recommends ${packages[*]}
 pip install docker-compose=="${DOCKER_COMPOSE_VERSION}"
 
 # install docker-machine
-curl -L "https://github.com/docker/machine/releases/download/v${DOCKER_MACHINE_VERSION}/docker-machine-$(uname -s)-$(uname -m)" > /usr/local/bin/docker-machine
+curl -L "https://github.com/docker/machine/releases/download/v${DOCKER_MACHINE_VERSION}/docker-machine-$(uname -s)-$(dpkg --print-architecture)" > /usr/local/bin/docker-machine
 chmod +x /usr/local/bin/docker-machine
 
 # install ODROID kernel

@@ -51,7 +51,7 @@ end
 describe package('initramfs-tools') do
   it { should be_installed }
 end
-describe package('linux-image-c1') do
+describe package('linux-image-3.10.104-186') do
   it { should be_installed }
 end
 
@@ -60,11 +60,5 @@ describe package('device-init') do
   it { should be_installed }
 end
 describe package('docker-engine') do
-  it { should be_installed }
-end
-describe package('docker-compose') do
-  it { should be_installed }
-end
-describe package('docker-machine') do
   it { should be_installed }
 end
