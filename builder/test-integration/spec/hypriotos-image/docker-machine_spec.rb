@@ -1,10 +1,6 @@
 require 'spec_helper'
 
 describe package('docker-machine') do
-  it { should be_installed }
-end
-
-describe command('dpkg -l docker-machine') do
   it { should_not be_installed }
 end
 
