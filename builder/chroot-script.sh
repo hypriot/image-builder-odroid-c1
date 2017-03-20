@@ -21,26 +21,45 @@ echo 'deb [arch=armhf] https://apt.dockerproject.org/repo debian-jessie main' > 
 
 # update all apt repository lists
 export DEBIAN_FRONTEND=noninteractive
-apt-get update 
-apt-get upgrade -y 
+apt-get update
+apt-get upgrade -y
 
-# ---install Docker tools---
-apt-get install -y \
-  fake-hwclock \
-  device-init="${DEVICE_INIT_VERSION}" \
-  cgroupfs-mount \
-  cgroup-bin \
-  libltdl7 \
-  docker-engine="${DOCKER_ENGINE_VERSION}" \
-  docker-compose="${DOCKER_COMPOSE_VERSION}" \
-  docker-machine="${DOCKER_MACHINE_VERSION}" 
+# define packages to install
+packages=(
+    # as the Odroid C1/C1+ does not have a hardware clock we need a fake one
+    fake-hwclock
+
+    # install device-init
+    device-init=${DEVICE_INIT_VERSION}
+
+    # install dependencies for docker-tools
+    cgroupfs-mount \
+    cgroup-bin \
+    libltdl7 \
+
+    # required to install docker-compose
+    python-pip
+
+    # install docker-engine, docker-machine
+    docker-engine="${DOCKER_ENGINE_VERSION}"
+)
+
+apt-get -y install --no-install-recommends ${packages[*]}
+
+# install docker-compose
+pip install docker-compose=="${DOCKER_COMPOSE_VERSION}"
+
+# install docker-machine
+curl -L "https://github.com/docker/machine/releases/download/v${DOCKER_MACHINE_VERSION}/docker-machine-$(uname -s)-$(uname -m)" > /usr/local/bin/docker-machine
+chmod +x /usr/local/bin/docker-machine
 
 # install ODROID kernel
 touch /boot/uImage
 apt-get install -y \
-  u-boot-tools \
-  initramfs-tools \
-  linux-image-c1="${KERNEL_VERSION}"
+    --no-install-recommends \
+    u-boot-tools \
+    initramfs-tools \
+    linux-image-"${KERNEL_VERSION}"
 
 # cleanup APT cache and lists
 apt-get clean
