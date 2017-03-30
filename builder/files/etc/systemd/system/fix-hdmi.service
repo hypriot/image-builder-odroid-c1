@@ -1,0 +1,10 @@
+[Unit]
+Description=Enable HDMI console
+
+[Service]
+Type=oneshot
+ExecStart=/bin/sh -c 'echo 0 > /sys/devices/platform/mesonfb/graphics/fb1/blank'
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
